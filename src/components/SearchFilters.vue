@@ -15,30 +15,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits } from 'vue'
+import { ref, watch, defineProps, defineEmits } from "vue";
 
 const props = defineProps<{
-  modelValue: string
-  placeholder?: string
-}>()
+	modelValue: string;
+	placeholder?: string;
+}>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-  (e: 'search', value: string): void
-}>()
+	(e: "update:modelValue", value: string): void;
+	(e: "search", value: string): void;
+}>();
 
-const queryInternal = ref(props.modelValue || '')
+const queryInternal = ref(props.modelValue || "");
 
 watch(
-  () => props.modelValue,
-  (val) => {
-    queryInternal.value = val
-  }
-)
+	() => props.modelValue,
+	(val) => {
+		queryInternal.value = val;
+	},
+);
 
 function onInput() {
-  emit('update:modelValue', queryInternal.value)
-  emit('search', queryInternal.value)
+	emit("update:modelValue", queryInternal.value);
+	emit("search", queryInternal.value);
 }
 </script>
 

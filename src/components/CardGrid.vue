@@ -14,39 +14,41 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick, watch } from 'vue'
-import LazyCard from '@/assets/LazyCard.webp'
+import { onMounted, nextTick, watch } from "vue";
+import LazyCard from "@/assets/LazyCard.webp";
+import type { Card } from "@types/cards";
 
-interface Card {
-  id: number
-  name: string
-  card_number: string
-  image_url: string
-}
+const props = defineProps<{ cards: Card[] }>();
 
-const props = defineProps<{ cards: Card[] }>()
-
-const lazySrc = (src: string) => LazyCard
+const lazySrc = (src: string) => LazyCard;
 
 function initLazyLoad() {
-  const images = document.querySelectorAll('img.lazy') as NodeListOf<HTMLImageElement>
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const img = entry.target as HTMLImageElement
-        img.src = img.dataset.src!
-        img.classList.remove('lazy')
-        obs.unobserve(img)
-      }
-    })
-  }, { rootMargin: '50px', threshold: 0.1 })
+	const images = document.querySelectorAll(
+		"img.lazy",
+	) as NodeListOf<HTMLImageElement>;
+	const observer = new IntersectionObserver(
+		(entries, obs) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					const img = entry.target as HTMLImageElement;
+					if (img.dataset.src) img.src = img.dataset.src;
+					img.classList.remove("lazy");
+					obs.unobserve(img);
+				}
+			});
+		},
+		{ rootMargin: "50px", threshold: 0.1 },
+	);
 
-  images.forEach(img => observer.observe(img))
+	images.forEach((img) => observer.observe(img));
 }
 
 // Inicializar lazy load cuando las cartas cambien
-onMounted(() => nextTick(initLazyLoad))
-watch(() => props.cards, () => nextTick(initLazyLoad))
+onMounted(() => nextTick(initLazyLoad));
+watch(
+	() => props.cards,
+	() => nextTick(initLazyLoad),
+);
 </script>
 
 <style scoped>
