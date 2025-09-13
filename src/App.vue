@@ -1,30 +1,72 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <header>
+      <h1>Bazar Del Tamer</h1>
+    </header>
+
+    <nav>
+      <ul>
+        <li><router-link to="/">Cartas</router-link></li>
+        <li><router-link to="/collection">Colección</router-link></li>
+        <li><router-link to="/decks">Mazos</router-link></li>
+      </ul>
+    </nav>
+
+    <main>
+      <router-view />
+    </main>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
+<script setup lang="ts"></script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  margin: 0 auto;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+header {
+  background-color: var(--color-bg-nav-active);
+  color: var(--color-text);
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+nav {
+  background-color: var(--color-bg-nav);
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li a {
+  display: block;
+  padding: 1rem 2rem;
+  transition: background-color 0.25s;
+}
+
+nav ul li a.router-link-active {
+  background-color: var(--color-bg-nav-active);
+}
+
+nav ul li a:hover {
+  background-color: #505f78;
+}
+
+main {
+  flex: 1;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 1rem;
 }
 </style>
