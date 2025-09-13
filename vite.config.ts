@@ -10,7 +10,8 @@ export default defineConfig({
 			"@views": resolve(__dirname, "src/views"),
 			"@stores": resolve(__dirname, "src/stores"),
 			"@components": resolve(__dirname, "src/components"),
-			"@types": resolve(__dirname, "src/types")
+			"@types": resolve(__dirname, "src/types"),
+			"@utils": resolve(__dirname, "src/utils")
 		},
 	},
 });

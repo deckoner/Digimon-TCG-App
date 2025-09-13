@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useCardStore } from '@stores/cards'
+import { useCardStore } from '@stores/cardsStore'
 import SearchFilters from '@components/SearchFilters.vue'
 import CardGrid from '@components/CardGrid.vue'
 
