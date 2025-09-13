@@ -14,26 +14,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useCardStore } from '@stores/cardsStore'
-import SearchFilters from '@components/SearchFilters.vue'
-import CardGrid from '@components/CardGrid.vue'
+import { ref, computed, onMounted } from "vue";
+import { useCardStore } from "@stores/cardsStore";
+import SearchFilters from "@components/SearchFilters.vue";
+import CardGrid from "@components/CardGrid.vue";
 
-const cardStore = useCardStore()
-const searchQuery = ref('')
+const cardStore = useCardStore();
+const searchQuery = ref("");
 
 onMounted(async () => {
-  await cardStore.fetchCards(1)
-})
+	await cardStore.fetchCards(1);
+});
 
 const filteredCards = computed(() => {
-  if (!searchQuery.value) return cardStore.cards
-  return cardStore.cards.filter(card =>
-    card.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-})
+	if (!searchQuery.value) return cardStore.cards;
+	return cardStore.cards.filter((card) =>
+		card.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+	);
+});
 
 function onSearch(query: string) {
-  console.log('Buscar:', query)
+	console.log("Buscar:", query);
 }
 </script>
