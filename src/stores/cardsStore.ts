@@ -20,7 +20,11 @@ export const useCardStore = defineStore("cardStore", {
 			// Intentar cargar desde cache
 			const cached = getCache<CardSimple[]>("cards-list");
 			if (cached) {
-				this.cards = cached;
+				// Asegurar que alternative sea booleano
+				this.cards = cached.map((card) => ({
+					...card,
+					alternative: !!card.alternative,
+				}));
 				this.loading = false;
 				return;
 			}
@@ -29,7 +33,14 @@ export const useCardStore = defineStore("cardStore", {
 				const res = await axios.get<CardSimple[]>(
 					"http://localhost:3001/api/cards/ids",
 				);
-				this.cards = res.data;
+
+				// Convertir alternative a booleano
+				this.cards = res.data.map((card) => ({
+					...card,
+					alternative: !!card.alternative,
+				}));
+
+				// Guardar en caché también con booleanos
 				setCache("cards-list", this.cards, CARDS_TTL);
 			} catch (err) {
 				this.error = "Error al cargar las cartas";

@@ -1,40 +1,201 @@
 <template>
   <div class="search-filters">
+    <!-- Búsqueda por nombre -->
     <input
       type="text"
-      v-model="queryInternal"
-      :placeholder="placeholder"
+      v-model="queryInternal.name"
+      placeholder="Buscar por nombre"
       @input="onInput"
-      aria-label="Buscar"
+      aria-label="Buscar por nombre"
+      class="search-input"
     />
 
-    <div class="filters">
+    <!-- Filtros -->
+    <div class="filters" v-if="auxLoaded">
+      <!-- Tipo de carta -->
+      <select v-model="queryInternal.card_type" @change="onInput">
+        <option :value="null">Tipo de carta</option>
+        <option v-for="ct in auxStore.data.cardTypes" :key="ct.id" :value="ct.id">
+          {{ ct.name }}
+        </option>
+      </select>
+
+      <!-- Rareza -->
+      <select v-model="queryInternal.rarity" @change="onInput">
+        <option :value="null">Rareza</option>
+        <option v-for="r in auxStore.data.rarities" :key="r.id" :value="r.id">
+          {{ r.name }}
+        </option>
+      </select>
+
+      <!-- Colores -->
+      <select v-model="queryInternal.color_one" @change="onInput">
+        <option :value="null">Color 1</option>
+        <option v-for="c in filteredColors('color_one')" :key="c.id" :value="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+
+      <select v-model="queryInternal.color_two" @change="onInput">
+        <option :value="null">Color 2</option>
+        <option v-for="c in filteredColors('color_two')" :key="c.id" :value="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+
+      <select v-model="queryInternal.color_three" @change="onInput">
+        <option :value="null">Color 3</option>
+        <option v-for="c in filteredColors('color_three')" :key="c.id" :value="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+
+      <!-- Coste -->
+      <input
+        type="number"
+        min="1"
+        max="20"
+        v-model.number="queryInternal.cost"
+        placeholder="Coste"
+        @input="onInput"
+      />
+
+      <!-- Etapa -->
+      <select v-model="queryInternal.stage" @change="onInput">
+        <option :value="null">Etapa</option>
+        <option v-for="s in auxStore.data.stages" :key="s.id" :value="s.id">
+          {{ s.name }}
+        </option>
+      </select>
+
+      <!-- Atributo -->
+      <select v-model="queryInternal.attribute" @change="onInput">
+        <option :value="null">Atributo</option>
+        <option v-for="a in auxStore.data.attributes" :key="a.id" :value="a.id">
+          {{ a.name }}
+        </option>
+      </select>
+
+      <!-- Tipos -->
+      <select v-model="queryInternal.type_one" @change="onInput">
+        <option :value="null">Tipo 1</option>
+        <option v-for="t in auxStore.data.types" :key="t.id" :value="t.id">
+          {{ t.name }}
+        </option>
+      </select>
+
+      <select v-model="queryInternal.type_two" @change="onInput">
+        <option :value="null">Tipo 2</option>
+        <option v-for="t in auxStore.data.types" :key="t.id" :value="t.id">
+          {{ t.name }}
+        </option>
+      </select>
+
+      <!-- BT -->
+      <select v-model="queryInternal.bt_abbreviation" @change="onInput">
+        <option :value="null">BT</option>
+        <option v-for="bt in auxStore.data.bts" :key="bt.id" :value="bt.id">
+          {{ bt.abbreviation }}
+        </option>
+      </select>
+
+      <!-- Alternativa -->
+      <label class="alternative-label">
+        <input
+          type="checkbox"
+          v-model="queryInternal.alternative"
+          @change="onInput"
+        />
+        Alternativa
+      </label>
+
       <slot name="filters"></slot>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits } from "vue";
+import { ref, watch, defineProps, defineEmits, onMounted, computed } from "vue";
+import { useAuxStore } from "@stores/auxStore";
+
+const auxStore = useAuxStore();
+const auxLoaded = ref(false);
 
 const props = defineProps<{
-	modelValue: string;
-	placeholder?: string;
+	modelValue: Partial<{
+		name: string;
+		card_type: number | null;
+		rarity: number | null;
+		color_one: number | null;
+		color_two?: number | null;
+		color_three?: number | null;
+		cost?: number | null;
+		stage?: number | null;
+		attribute?: number | null;
+		type_one: number | null;
+		type_two?: number | null;
+		bt_abbreviation: number | null;
+		alternative: boolean | null;
+	}>;
 }>();
 
 const emit = defineEmits<{
-	(e: "update:modelValue", value: string): void;
-	(e: "search", value: string): void;
+	(e: "update:modelValue", value: typeof props.modelValue): void;
+	(e: "search", value: typeof props.modelValue): void;
 }>();
 
-const queryInternal = ref(props.modelValue || "");
+const queryInternal = ref({
+	name: props.modelValue?.name || "",
+	card_type: props.modelValue?.card_type ?? null,
+	rarity: props.modelValue?.rarity ?? null,
+	color_one: props.modelValue?.color_one ?? null,
+	color_two: props.modelValue?.color_two ?? null,
+	color_three: props.modelValue?.color_three ?? null,
+	cost: props.modelValue?.cost ?? null,
+	stage: props.modelValue?.stage ?? null,
+	attribute: props.modelValue?.attribute ?? null,
+	type_one: props.modelValue?.type_one ?? null,
+	type_two: props.modelValue?.type_two ?? null,
+	bt_abbreviation: props.modelValue?.bt_abbreviation ?? null,
+	alternative: props.modelValue?.alternative ?? null,
+});
 
 watch(
 	() => props.modelValue,
 	(val) => {
-		queryInternal.value = val;
+		queryInternal.value = {
+			name: val?.name || "",
+			card_type: val?.card_type ?? null,
+			rarity: val?.rarity ?? null,
+			color_one: val?.color_one ?? null,
+			color_two: val?.color_two ?? null,
+			color_three: val?.color_three ?? null,
+			cost: val?.cost ?? null,
+			stage: val?.stage ?? null,
+			attribute: val?.attribute ?? null,
+			type_one: val?.type_one ?? null,
+			type_two: val?.type_two ?? null,
+			bt_abbreviation: val?.bt_abbreviation ?? null,
+			alternative: val?.alternative ?? null,
+		};
 	},
 );
+
+onMounted(async () => {
+	await auxStore.fetchAuxData();
+	auxLoaded.value = true;
+});
+
+// Filtrar colores para que no se repitan
+function filteredColors(current: "color_one" | "color_two" | "color_three") {
+	const used = [
+		current !== "color_one" ? queryInternal.value.color_one : null,
+		current !== "color_two" ? queryInternal.value.color_two : null,
+		current !== "color_three" ? queryInternal.value.color_three : null,
+	].filter(Boolean);
+
+	return auxStore.data.colors.filter((c) => !used.includes(c.id));
+}
 
 function onInput() {
 	emit("update:modelValue", queryInternal.value);
@@ -46,28 +207,55 @@ function onInput() {
 .search-filters {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.search-filters input[type="text"] {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
+.search-input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
   border: 1px solid #646cff;
   font-size: 1rem;
   width: 100%;
   max-width: 400px;
   background-color: var(--color-bg-card);
   color: var(--color-text);
+  transition: border-color 0.2s;
 }
 
-.search-filters input:focus {
-  outline: 2px solid var(--color-bg-nav-active);
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-bg-nav-active);
 }
 
 .filters {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.filters select,
+.filters input[type="number"] {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #646cff;
+  background-color: var(--color-bg-card);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.filters select:focus,
+.filters input:focus {
+  outline: none;
+  border-color: var(--color-bg-nav-active);
+}
+
+.alternative-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.95rem;
 }
 </style>
