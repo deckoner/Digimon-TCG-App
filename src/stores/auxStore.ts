@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import type { AuxData } from '@types/auxItems';
+import type { AuxData } from "@types/auxItems";
 import { getCache, setCache } from '@utils/useCache';
 import axios from 'axios';
 
 // 1 día en segundos
 const AUX_TTL = 60 * 60 * 24;
-const API_URL = 'http://localhost:3001/api/aux';
+const API_URL = '/api/aux';
 
 export const useAuxStore = defineStore('auxStore', {
   state: () => ({

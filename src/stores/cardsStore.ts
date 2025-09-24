@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import type { CardSimple } from '@types/cardsTypes';
+import type { CardSimple } from '@types/cardsType';
 import { getCache, setCache } from '@utils/useCache';
 
-// 1 hora en el cache
 const CARDS_TTL = 60 * 60;
 
 export const useCardStore = defineStore('cardStore', {
@@ -30,7 +29,7 @@ export const useCardStore = defineStore('cardStore', {
       }
 
       try {
-        const res = await axios.get<CardSimple[]>('http://localhost:3001/api/cards/ids');
+        const res = await axios.get<CardSimple[]>('/api/cards/ids');
 
         // Convertir alternative a booleano
         this.cards = res.data.map((card) => ({
