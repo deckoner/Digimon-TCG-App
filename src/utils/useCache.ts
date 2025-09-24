@@ -19,7 +19,7 @@ export function getCache<T>(key: string): T | null {
     }
     return item.value;
   } catch (e) {
-    console.error("Error leyendo cache:", e);
+    console.error('Error leyendo cache:', e);
     localStorage.removeItem(key);
     return null;
   }

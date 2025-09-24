@@ -1,12 +1,12 @@
-import { defineStore } from "pinia";
-import axios from "axios";
-import type { CardSimple } from "@types/cardsTypes";
-import { getCache, setCache } from "@utils/useCache";
+import { defineStore } from 'pinia';
+import axios from 'axios';
+import type { CardSimple } from '@types/cardsTypes';
+import { getCache, setCache } from '@utils/useCache';
 
 // 1 hora en el cache
 const CARDS_TTL = 60 * 60;
 
-export const useCardStore = defineStore("cardStore", {
+export const useCardStore = defineStore('cardStore', {
   state: () => ({
     cards: [] as CardSimple[],
     loading: false,
@@ -18,7 +18,7 @@ export const useCardStore = defineStore("cardStore", {
       this.error = null;
 
       // Intentar cargar desde cache
-      const cached = getCache<CardSimple[]>("cards-list");
+      const cached = getCache<CardSimple[]>('cards-list');
       if (cached) {
         // Asegurar que alternative sea booleano
         this.cards = cached.map((card) => ({
@@ -30,9 +30,7 @@ export const useCardStore = defineStore("cardStore", {
       }
 
       try {
-        const res = await axios.get<CardSimple[]>(
-          "http://localhost:3001/api/cards/ids",
-        );
+        const res = await axios.get<CardSimple[]>('http://localhost:3001/api/cards/ids');
 
         // Convertir alternative a booleano
         this.cards = res.data.map((card) => ({
@@ -41,9 +39,9 @@ export const useCardStore = defineStore("cardStore", {
         }));
 
         // Guardar en caché también con booleanos
-        setCache("cards-list", this.cards, CARDS_TTL);
+        setCache('cards-list', this.cards, CARDS_TTL);
       } catch (err) {
-        this.error = "Error al cargar las cartas";
+        this.error = 'Error al cargar las cartas';
         console.error(err);
       } finally {
         this.loading = false;

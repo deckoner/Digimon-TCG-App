@@ -15,11 +15,7 @@
       <!-- Tipo de carta -->
       <select v-model="queryInternal.card_type" @change="onInput">
         <option :value="null">Tipo de carta</option>
-        <option
-          v-for="ct in auxStore.data.cardTypes"
-          :key="ct.id"
-          :value="ct.id"
-        >
+        <option v-for="ct in auxStore.data.cardTypes" :key="ct.id" :value="ct.id">
           {{ ct.name }}
         </option>
       </select>
@@ -35,33 +31,21 @@
       <!-- Colores -->
       <select v-model="queryInternal.color_one" @change="onInput">
         <option :value="null">Color 1</option>
-        <option
-          v-for="c in filteredColors('color_one')"
-          :key="c.id"
-          :value="c.id"
-        >
+        <option v-for="c in filteredColors('color_one')" :key="c.id" :value="c.id">
           {{ c.name }}
         </option>
       </select>
 
       <select v-model="queryInternal.color_two" @change="onInput">
         <option :value="null">Color 2</option>
-        <option
-          v-for="c in filteredColors('color_two')"
-          :key="c.id"
-          :value="c.id"
-        >
+        <option v-for="c in filteredColors('color_two')" :key="c.id" :value="c.id">
           {{ c.name }}
         </option>
       </select>
 
       <select v-model="queryInternal.color_three" @change="onInput">
         <option :value="null">Color 3</option>
-        <option
-          v-for="c in filteredColors('color_three')"
-          :key="c.id"
-          :value="c.id"
-        >
+        <option v-for="c in filteredColors('color_three')" :key="c.id" :value="c.id">
           {{ c.name }}
         </option>
       </select>
@@ -117,11 +101,7 @@
 
       <!-- Alternativa -->
       <label class="alternative-label">
-        <input
-          type="checkbox"
-          v-model="queryInternal.alternative"
-          @change="onInput"
-        />
+        <input type="checkbox" v-model="queryInternal.alternative" @change="onInput" />
         Alternativa
       </label>
 
@@ -131,8 +111,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits, onMounted, computed } from "vue";
-import { useAuxStore } from "@stores/auxStore";
+import { ref, watch, defineProps, defineEmits, onMounted, computed } from 'vue';
+import { useAuxStore } from '@stores/auxStore';
 
 const auxStore = useAuxStore();
 const auxLoaded = ref(false);
@@ -156,12 +136,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: typeof props.modelValue): void;
-  (e: "search", value: typeof props.modelValue): void;
+  (e: 'update:modelValue', value: typeof props.modelValue): void;
+  (e: 'search', value: typeof props.modelValue): void;
 }>();
 
 const queryInternal = ref({
-  name: props.modelValue?.name || "",
+  name: props.modelValue?.name || '',
   card_type: props.modelValue?.card_type ?? null,
   rarity: props.modelValue?.rarity ?? null,
   color_one: props.modelValue?.color_one ?? null,
@@ -180,7 +160,7 @@ watch(
   () => props.modelValue,
   (val) => {
     queryInternal.value = {
-      name: val?.name || "",
+      name: val?.name || '',
       card_type: val?.card_type ?? null,
       rarity: val?.rarity ?? null,
       color_one: val?.color_one ?? null,
@@ -203,19 +183,19 @@ onMounted(async () => {
 });
 
 // Filtrar colores para que no se repitan
-function filteredColors(current: "color_one" | "color_two" | "color_three") {
+function filteredColors(current: 'color_one' | 'color_two' | 'color_three') {
   const used = [
-    current !== "color_one" ? queryInternal.value.color_one : null,
-    current !== "color_two" ? queryInternal.value.color_two : null,
-    current !== "color_three" ? queryInternal.value.color_three : null,
+    current !== 'color_one' ? queryInternal.value.color_one : null,
+    current !== 'color_two' ? queryInternal.value.color_two : null,
+    current !== 'color_three' ? queryInternal.value.color_three : null,
   ].filter(Boolean);
 
   return auxStore.data.colors.filter((c) => !used.includes(c.id));
 }
 
 function onInput() {
-  emit("update:modelValue", queryInternal.value);
-  emit("search", queryInternal.value);
+  emit('update:modelValue', queryInternal.value);
+  emit('search', queryInternal.value);
 }
 </script>
 
@@ -252,7 +232,7 @@ function onInput() {
 }
 
 .filters select,
-.filters input[type="number"] {
+.filters input[type='number'] {
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
   border: 1px solid #646cff;

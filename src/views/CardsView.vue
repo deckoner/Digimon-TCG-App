@@ -1,26 +1,19 @@
 <template>
   <section>
-    <SearchFilters
-      v-model="searchQuery"
-      @search="onSearch"
-      placeholder="Buscar cartas..."
-    />
+    <SearchFilters v-model="searchQuery" @search="onSearch" placeholder="Buscar cartas..." />
 
     <div v-if="cardStore.loading" aria-busy="true">Cargando...</div>
     <div v-if="cardStore.error" role="alert">{{ cardStore.error }}</div>
 
-    <CardGrid
-      v-if="!cardStore.loading && !cardStore.error"
-      :cards="filteredCards"
-    />
+    <CardGrid v-if="!cardStore.loading && !cardStore.error" :cards="filteredCards" />
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useCardStore } from "@stores/cardsStore";
-import SearchFilters from "@components/SearchFilters.vue";
-import CardGrid from "@components/CardGrid.vue";
+import { ref, computed, onMounted } from 'vue';
+import { useCardStore } from '@stores/cardsStore';
+import SearchFilters from '@components/SearchFilters.vue';
+import CardGrid from '@components/CardGrid.vue';
 
 interface FilterQuery {
   name: string;
@@ -42,7 +35,7 @@ const cardStore = useCardStore();
 
 // Estado inicial: alternative = false para ocultar alters
 const searchQuery = ref<FilterQuery>({
-  name: "",
+  name: '',
   card_type: null,
   rarity: null,
   color_one: null,
@@ -71,36 +64,21 @@ const filteredCards = computed(() => {
 
   return cardStore.cards.filter((card) => {
     // Nombre
-    const nameMatch = card.name
-      .toLowerCase()
-      .includes(searchQuery.value.name.toLowerCase());
+    const nameMatch = card.name.toLowerCase().includes(searchQuery.value.name.toLowerCase());
 
     // Colores de la carta
-    const cardColors = [
-      card.color_one,
-      card.color_two,
-      card.color_three,
-    ].filter(Boolean);
+    const cardColors = [card.color_one, card.color_two, card.color_three].filter(Boolean);
 
     // Comprobar que la carta contenga todos los colores seleccionados (sin importar el orden)
-    const colorsMatch = selectedColors.every((color) =>
-      cardColors.includes(color),
-    );
+    const colorsMatch = selectedColors.every((color) => cardColors.includes(color));
 
     // Otros filtros
     const cardTypeMatch = searchQuery.value.card_type
       ? card.card_type === searchQuery.value.card_type
       : true;
-    const rarityMatch = searchQuery.value.rarity
-      ? card.rarity === searchQuery.value.rarity
-      : true;
-    const costMatch =
-      searchQuery.value.cost !== null
-        ? card.cost === searchQuery.value.cost
-        : true;
-    const stageMatch = searchQuery.value.stage
-      ? card.stage === searchQuery.value.stage
-      : true;
+    const rarityMatch = searchQuery.value.rarity ? card.rarity === searchQuery.value.rarity : true;
+    const costMatch = searchQuery.value.cost !== null ? card.cost === searchQuery.value.cost : true;
+    const stageMatch = searchQuery.value.stage ? card.stage === searchQuery.value.stage : true;
     const attributeMatch = searchQuery.value.attribute
       ? card.attribute === searchQuery.value.attribute
       : true;
@@ -117,10 +95,7 @@ const filteredCards = computed(() => {
     // Filtro de alternative:
     // false => solo normales
     // true  => mostrar todas
-    const altMatch =
-      searchQuery.value.alternative === false
-        ? card.alternative === false
-        : true;
+    const altMatch = searchQuery.value.alternative === false ? card.alternative === false : true;
 
     return (
       nameMatch &&
@@ -139,6 +114,6 @@ const filteredCards = computed(() => {
 });
 
 function onSearch(query: FilterQuery) {
-  console.log("Filtros aplicados:", query);
+  console.log('Filtros aplicados:', query);
 }
 </script>

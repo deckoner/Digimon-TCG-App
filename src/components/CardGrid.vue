@@ -14,30 +14,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick, watch } from "vue";
-import LazyCard from "@/assets/LazyCard.webp";
-import type { Card } from "@types/cards";
+import { onMounted, nextTick, watch } from 'vue';
+import LazyCard from '@/assets/LazyCard.webp';
+import type { Card } from '@types/cards';
 
 const props = defineProps<{ cards: Card[] }>();
 
 const lazySrc = (src: string) => LazyCard;
 
 function initLazyLoad() {
-  const images = document.querySelectorAll(
-    "img.lazy",
-  ) as NodeListOf<HTMLImageElement>;
+  const images = document.querySelectorAll('img.lazy') as NodeListOf<HTMLImageElement>;
   const observer = new IntersectionObserver(
     (entries, obs) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const img = entry.target as HTMLImageElement;
           if (img.dataset.src) img.src = img.dataset.src;
-          img.classList.remove("lazy");
+          img.classList.remove('lazy');
           obs.unobserve(img);
         }
       });
     },
-    { rootMargin: "50px", threshold: 0.1 },
+    { rootMargin: '50px', threshold: 0.1 },
   );
 
   images.forEach((img) => observer.observe(img));

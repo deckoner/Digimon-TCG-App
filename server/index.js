@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
-import axios from "axios";
-import dotenv from "dotenv";
+import express from 'express';
+import cors from 'cors';
+import axios from 'axios';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ const axiosConfig = {
 };
 
 // Endpoint principal de cartas
-app.get("/api/cards/ids", async (req, res) => {
+app.get('/api/cards/ids', async (req, res) => {
   const page = req.query.page || 1;
 
   try {
@@ -34,35 +34,22 @@ app.get("/api/cards/ids", async (req, res) => {
 
     res.json(response.data);
   } catch (error) {
-    console.error("Error al obtener cartas:", error.message);
-    res.status(500).json({ error: "Error interno al consultar las cartas." });
+    console.error('Error al obtener cartas:', error.message);
+    res.status(500).json({ error: 'Error interno al consultar las cartas.' });
   }
 });
 
 // Endpoints auxiliares
-const AUX_ENDPOINTS = [
-  "bts",
-  "colors",
-  "card-types",
-  "rarities",
-  "stages",
-  "attributes",
-  "types",
-];
+const AUX_ENDPOINTS = ['bts', 'colors', 'card-types', 'rarities', 'stages', 'attributes', 'types'];
 
 AUX_ENDPOINTS.forEach((endpoint) => {
   app.get(`/api/aux/${endpoint}`, async (_req, res) => {
     try {
-      const response = await axios.get(
-        `${API_URL}/aux/${endpoint}`,
-        axiosConfig,
-      );
+      const response = await axios.get(`${API_URL}/aux/${endpoint}`, axiosConfig);
       res.json(response.data);
     } catch (error) {
       console.error(`Error al obtener /aux/${endpoint}:`, error.message);
-      res
-        .status(500)
-        .json({ error: `Error al consultar datos auxiliares: ${endpoint}` });
+      res.status(500).json({ error: `Error al consultar datos auxiliares: ${endpoint}` });
     }
   });
 });
