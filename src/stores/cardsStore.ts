@@ -3,7 +3,8 @@ import axios from 'axios';
 import type { CardSimple } from '@types/cardsType';
 import { getCache, setCache } from '@utils/useCache';
 
-const CARDS_TTL = 60 * 60;
+const CARDS_TTL = 60 * 60; // 1 hora
+const API_URL = '/api/cards/ids';
 
 export const useCardStore = defineStore('cardStore', {
   state: () => ({
@@ -11,6 +12,7 @@ export const useCardStore = defineStore('cardStore', {
     loading: false,
     error: null as string | null,
   }),
+
   actions: {
     async fetchCards() {
       this.loading = true;
@@ -29,7 +31,7 @@ export const useCardStore = defineStore('cardStore', {
       }
 
       try {
-        const res = await axios.get<CardSimple[]>('/api/cards/ids');
+        const res = await axios.get<CardSimple[]>(API_URL);
 
         // Convertir alternative a booleano
         this.cards = res.data.map((card) => ({

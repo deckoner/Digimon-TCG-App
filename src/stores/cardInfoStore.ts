@@ -1,4 +1,3 @@
-// src/stores/cardInfoStore.ts
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import type { CardInfo } from '@types/cardsType';
@@ -8,10 +7,12 @@ interface CachedCard {
   timestamp: number;
 }
 
+const CARD_TTL = 1000 * 60 * 60 * 24; // 1 día
+const API_URL = '/api/cards';
+
 export const useCardInfoStore = defineStore('cardInfo', {
   state: () => ({
     cards: {} as Record<string, CachedCard>,
-    cacheDuration: 1000 * 60 * 60 * 24, // 1 día
   }),
 
   actions: {
@@ -20,13 +21,13 @@ export const useCardInfoStore = defineStore('cardInfo', {
       const cached = this.cards[card_number];
 
       // Retornar de cache si sigue vigente
-      if (cached && now - cached.timestamp < this.cacheDuration) {
+      if (cached && now - cached.timestamp < CARD_TTL) {
         return cached.card;
       }
 
       try {
         // Petición al backend local
-        const res = await axios.get(`/api/cards/${card_number}`);
+        const res = await axios.get(`${API_URL}/${card_number}`);
         const data = res.data;
 
         // Convertir alternative a boolean
