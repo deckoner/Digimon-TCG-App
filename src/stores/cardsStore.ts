@@ -3,7 +3,8 @@ import axios from 'axios';
 import type { CardSimple } from '@types/cardsType';
 import { getCache, setCache } from '@utils/useCache';
 
-const CARDS_TTL = 60 * 60; // 1 hora
+// Cache TTL for card list (1 hour)
+const CARDS_TTL = 60 * 60;
 const API_URL = '/api/cards/ids';
 
 export const useCardStore = defineStore('cardStore', {
@@ -14,14 +15,15 @@ export const useCardStore = defineStore('cardStore', {
   }),
 
   actions: {
+    // Fetch all cards, using cache if available
     async fetchCards() {
       this.loading = true;
       this.error = null;
 
-      // Intentar cargar desde cache
+      // Try to load from cache
       const cached = getCache<CardSimple[]>('cards-list');
       if (cached) {
-        // Asegurar que alternative sea booleano
+        // Ensure 'alternative' is boolean
         this.cards = cached.map((card) => ({
           ...card,
           alternative: !!card.alternative,
@@ -33,16 +35,16 @@ export const useCardStore = defineStore('cardStore', {
       try {
         const res = await axios.get<CardSimple[]>(API_URL);
 
-        // Convertir alternative a booleano
+        // Ensure 'alternative' is boolean
         this.cards = res.data.map((card) => ({
           ...card,
           alternative: !!card.alternative,
         }));
 
-        // Guardar en caché también con booleanos
+        // Save in cache
         setCache('cards-list', this.cards, CARDS_TTL);
       } catch (err) {
-        this.error = 'Error al cargar las cartas';
+        this.error = 'Error loading cards';
         console.error(err);
       } finally {
         this.loading = false;

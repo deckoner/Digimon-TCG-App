@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <header>
-      <h1>Bazar Del Tamer</h1>
+      <h1>Tamer's Bazaar</h1>
     </header>
 
     <nav>
       <ul>
-        <li><router-link to="/">Cartas</router-link></li>
-        <li><router-link to="/collection">Colección</router-link></li>
-        <li><router-link to="/decks">Mazos</router-link></li>
+        <li><router-link to="/">Cards</router-link></li>
+        <li><router-link to="/collection">Collection</router-link></li>
+        <li><router-link to="/decks">Decks</router-link></li>
       </ul>
     </nav>
 

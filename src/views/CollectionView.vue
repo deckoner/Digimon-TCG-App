@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Mi Colección</h2>
-    <p>Aquí irá la colección de cartas del usuario.</p>
+    <h2>My Collection</h2>
+    <p>This is where the user's card collection will appear.</p>
   </div>
 </template>

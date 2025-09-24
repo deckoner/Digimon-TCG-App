@@ -8,12 +8,14 @@
       @click="props.clickable && goToCardDetail(card.card_number)"
     >
       <div v-if="card.alternative" class="alternative-badge">Alt</div>
+
       <img
         :src="lazySrc(card.image_url)"
         :data-src="card.image_url"
         :alt="card.name"
         class="lazy"
       />
+
       <p>{{ card.name }}</p>
       <p>({{ card.card_number }})</p>
     </article>
@@ -26,18 +28,25 @@ import { useRouter } from 'vue-router';
 import LazyCard from '@/assets/LazyCard.webp';
 import type { Card } from '@types/cards';
 
+// Props for card list and optional clickability
 const props = defineProps<{ cards: Card[]; clickable?: boolean }>();
 const router = useRouter();
 
+// Placeholder image for lazy loading
 const lazySrc = (src: string) => LazyCard;
 
+/**
+ * Navigate to card detail page.
+ * For alternative cards, strip everything after "_" to link to base card.
+ */
 function goToCardDetail(cardNumber: string) {
-  // Si tiene un "_", quitar todo desde el "_" hacia el final
   const baseCardNumber = cardNumber.includes('_') ? cardNumber.split('_')[0] : cardNumber;
-
   router.push(`/card/${baseCardNumber}`);
 }
 
+/**
+ * Initialize lazy loading for images using IntersectionObserver
+ */
 function initLazyLoad() {
   const images = document.querySelectorAll('img.lazy') as NodeListOf<HTMLImageElement>;
   const observer = new IntersectionObserver(
@@ -57,11 +66,9 @@ function initLazyLoad() {
   images.forEach((img) => observer.observe(img));
 }
 
+// Initialize lazy load on mount and whenever the cards list updates
 onMounted(() => nextTick(initLazyLoad));
-watch(
-  () => props.cards,
-  () => nextTick(initLazyLoad),
-);
+watch(() => props.cards, () => nextTick(initLazyLoad));
 </script>
 
 <style scoped>
@@ -79,9 +86,7 @@ watch(
   background-color: var(--color-bg-card);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   flex: 1 1 calc(20% - 1rem);
   max-width: 250px;
   min-width: 190px;

@@ -3,35 +3,36 @@
     <div class="card-image">
       <img :src="card.image_url" :alt="card.name" />
     </div>
+
     <div class="card-info">
       <h2>{{ card.name }} ({{ card.card_number }})</h2>
       <ul>
         <li><strong>DP:</strong> {{ card.dp ?? 'N/A' }}</li>
-        <li><strong>Tipo de carta:</strong> {{ card.card_type }}</li>
-        <li><strong>Rareza:</strong> {{ card.rarity }}</li>
+        <li><strong>Card Type:</strong> {{ card.card_type }}</li>
+        <li><strong>Rarity:</strong> {{ card.rarity }}</li>
         <li>
-          <strong>Colores:</strong>
+          <strong>Colors:</strong>
           {{ card.color_one }}
           <span v-if="card.color_two">, {{ card.color_two }}</span>
           <span v-if="card.color_three">, {{ card.color_three }}</span>
         </li>
-        <li><strong>Coste:</strong> {{ card.cost ?? 'N/A' }}</li>
-        <li><strong>Etapa:</strong> {{ card.stage ?? 'N/A' }}</li>
-        <li><strong>Atributo:</strong> {{ card.attribute ?? 'N/A' }}</li>
+        <li><strong>Cost:</strong> {{ card.cost ?? 'N/A' }}</li>
+        <li><strong>Stage:</strong> {{ card.stage ?? 'N/A' }}</li>
+        <li><strong>Attribute:</strong> {{ card.attribute ?? 'N/A' }}</li>
         <li>
-          <strong>Tipos:</strong> {{ card.type_one }}
+          <strong>Types:</strong> {{ card.type_one }}
           <span v-if="card.type_two">, {{ card.type_two }}</span>
         </li>
-        <li><strong>Efecto:</strong> {{ card.effect ?? 'N/A' }}</li>
-        <li><strong>Efecto de evolución:</strong> {{ card.evolution_effect ?? 'N/A' }}</li>
-        <li><strong>Efecto de seguridad:</strong> {{ card.security_effect ?? 'N/A' }}</li>
+        <li><strong>Effect:</strong> {{ card.effect ?? 'N/A' }}</li>
+        <li><strong>Evolution Effect:</strong> {{ card.evolution_effect ?? 'N/A' }}</li>
+        <li><strong>Security Effect:</strong> {{ card.security_effect ?? 'N/A' }}</li>
         <li><strong>BT:</strong> {{ card.bt_abbreviation }}</li>
-        <li><strong>Alternativa:</strong> {{ card.alternative ? 'Sí' : 'No' }}</li>
+        <li><strong>Alternative:</strong> {{ card.alternative ? 'Yes' : 'No' }}</li>
       </ul>
     </div>
   </section>
 
-  <p v-else>Cargando carta...</p>
+  <p v-else>Loading card...</p>
 </template>
 
 <script setup lang="ts">
@@ -40,17 +41,20 @@ import { useRoute } from 'vue-router';
 import { useCardInfoStore } from '@/stores/cardInfoStore';
 import type { CardInfo } from '@/types/cardsType';
 
+// Get card number from route
 const route = useRoute();
 const cardNumber = route.params.cardnumber as string;
+
 const store = useCardInfoStore();
 
 const card = ref<CardInfo | null>(null);
 
+// Fetch card on mount
 onMounted(async () => {
   try {
     card.value = await store.fetchCard(cardNumber);
   } catch (error) {
-    console.error('No se pudo cargar la carta:', error);
+    console.error('Failed to load card:', error);
   }
 });
 </script>
@@ -98,7 +102,6 @@ onMounted(async () => {
   color: var(--color-text-alt);
 }
 
-/* Media query para pantallas estrechas */
 @media (max-width: 768px) {
   .card-detail {
     flex-direction: column;

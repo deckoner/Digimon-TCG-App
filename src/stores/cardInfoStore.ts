@@ -2,12 +2,14 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import type { CardInfo } from '@types/cardsType';
 
+// Cached card structure
 interface CachedCard {
   card: CardInfo;
   timestamp: number;
 }
 
-const CARD_TTL = 1000 * 60 * 60 * 24; // 1 día
+// Time-to-live for cached cards (24 hours)
+const CARD_TTL = 1000 * 60 * 60 * 24;
 const API_URL = '/api/cards';
 
 export const useCardInfoStore = defineStore('cardInfo', {
@@ -16,39 +18,41 @@ export const useCardInfoStore = defineStore('cardInfo', {
   }),
 
   actions: {
-    async fetchCard(card_number: string): Promise<CardInfo> {
+    // Fetch a card by its number, using cache if valid
+    async fetchCard(cardNumber: string): Promise<CardInfo> {
       const now = Date.now();
-      const cached = this.cards[card_number];
+      const cached = this.cards[cardNumber];
 
-      // Retornar de cache si sigue vigente
+      // Return cached card if still valid
       if (cached && now - cached.timestamp < CARD_TTL) {
         return cached.card;
       }
 
       try {
-        // Petición al backend local
-        const res = await axios.get(`${API_URL}/${card_number}`);
+        // Request card data from backend
+        const res = await axios.get(`${API_URL}/${cardNumber}`);
         const data = res.data;
 
-        // Convertir alternative a boolean
+        // Ensure 'alternative' is boolean
         const card: CardInfo = {
           ...data,
           alternative: !!data.alternative,
         };
 
-        // Guardar en cache
-        this.cards[card_number] = { card, timestamp: now };
+        // Store card in cache
+        this.cards[cardNumber] = { card, timestamp: now };
 
         return card;
       } catch (error: any) {
-        console.error(`Error al obtener carta ${card_number}:`, error.message);
+        console.error(`Error fetching card ${cardNumber}:`, error.message);
         throw error;
       }
     },
 
-    clearCache(card_number?: string) {
-      if (card_number) {
-        delete this.cards[card_number];
+    // Clear cache for a specific card or all cards
+    clearCache(cardNumber?: string) {
+      if (cardNumber) {
+        delete this.cards[cardNumber];
       } else {
         this.cards = {};
       }
