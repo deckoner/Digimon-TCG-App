@@ -5,26 +5,26 @@ import CollectionView from "@views/CollectionView.vue";
 import DecksView from "@views/DecksView.vue";
 
 const routes: Array<RouteRecordRaw> = [
-	{
-		path: "/",
-		name: "Cards",
-		component: CardsView,
-	},
-	{
-		path: "/collection",
-		name: "Collection",
-		component: CollectionView,
-	},
-	{
-		path: "/decks",
-		name: "Decks",
-		component: DecksView,
-	},
+  {
+    path: "/",
+    name: "Cards",
+    component: CardsView,
+  },
+  {
+    path: "/collection",
+    name: "Collection",
+    component: CollectionView,
+  },
+  {
+    path: "/decks",
+    name: "Decks",
+    component: DecksView,
+  },
 ];
 
 const router = createRouter({
-	history: createWebHistory(),
-	routes,
+  history: createWebHistory(),
+  routes,
 });
 
 export default router;

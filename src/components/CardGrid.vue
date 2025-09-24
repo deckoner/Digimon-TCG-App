@@ -23,31 +23,31 @@ const props = defineProps<{ cards: Card[] }>();
 const lazySrc = (src: string) => LazyCard;
 
 function initLazyLoad() {
-	const images = document.querySelectorAll(
-		"img.lazy",
-	) as NodeListOf<HTMLImageElement>;
-	const observer = new IntersectionObserver(
-		(entries, obs) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					const img = entry.target as HTMLImageElement;
-					if (img.dataset.src) img.src = img.dataset.src;
-					img.classList.remove("lazy");
-					obs.unobserve(img);
-				}
-			});
-		},
-		{ rootMargin: "50px", threshold: 0.1 },
-	);
+  const images = document.querySelectorAll(
+    "img.lazy",
+  ) as NodeListOf<HTMLImageElement>;
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement;
+          if (img.dataset.src) img.src = img.dataset.src;
+          img.classList.remove("lazy");
+          obs.unobserve(img);
+        }
+      });
+    },
+    { rootMargin: "50px", threshold: 0.1 },
+  );
 
-	images.forEach((img) => observer.observe(img));
+  images.forEach((img) => observer.observe(img));
 }
 
 // Inicializar lazy load cuando las cartas cambien
 onMounted(() => nextTick(initLazyLoad));
 watch(
-	() => props.cards,
-	() => nextTick(initLazyLoad),
+  () => props.cards,
+  () => nextTick(initLazyLoad),
 );
 </script>
 
@@ -66,7 +66,9 @@ watch(
   background-color: var(--color-bg-card);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   flex: 1 1 calc(20% - 1rem);
   max-width: 250px;
   min-width: 190px;

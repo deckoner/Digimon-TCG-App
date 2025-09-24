@@ -15,7 +15,11 @@
       <!-- Tipo de carta -->
       <select v-model="queryInternal.card_type" @change="onInput">
         <option :value="null">Tipo de carta</option>
-        <option v-for="ct in auxStore.data.cardTypes" :key="ct.id" :value="ct.id">
+        <option
+          v-for="ct in auxStore.data.cardTypes"
+          :key="ct.id"
+          :value="ct.id"
+        >
           {{ ct.name }}
         </option>
       </select>
@@ -31,21 +35,33 @@
       <!-- Colores -->
       <select v-model="queryInternal.color_one" @change="onInput">
         <option :value="null">Color 1</option>
-        <option v-for="c in filteredColors('color_one')" :key="c.id" :value="c.id">
+        <option
+          v-for="c in filteredColors('color_one')"
+          :key="c.id"
+          :value="c.id"
+        >
           {{ c.name }}
         </option>
       </select>
 
       <select v-model="queryInternal.color_two" @change="onInput">
         <option :value="null">Color 2</option>
-        <option v-for="c in filteredColors('color_two')" :key="c.id" :value="c.id">
+        <option
+          v-for="c in filteredColors('color_two')"
+          :key="c.id"
+          :value="c.id"
+        >
           {{ c.name }}
         </option>
       </select>
 
       <select v-model="queryInternal.color_three" @change="onInput">
         <option :value="null">Color 3</option>
-        <option v-for="c in filteredColors('color_three')" :key="c.id" :value="c.id">
+        <option
+          v-for="c in filteredColors('color_three')"
+          :key="c.id"
+          :value="c.id"
+        >
           {{ c.name }}
         </option>
       </select>
@@ -122,84 +138,84 @@ const auxStore = useAuxStore();
 const auxLoaded = ref(false);
 
 const props = defineProps<{
-	modelValue: Partial<{
-		name: string;
-		card_type: number | null;
-		rarity: number | null;
-		color_one: number | null;
-		color_two?: number | null;
-		color_three?: number | null;
-		cost?: number | null;
-		stage?: number | null;
-		attribute?: number | null;
-		type_one: number | null;
-		type_two?: number | null;
-		bt_abbreviation: number | null;
-		alternative: boolean | null;
-	}>;
+  modelValue: Partial<{
+    name: string;
+    card_type: number | null;
+    rarity: number | null;
+    color_one: number | null;
+    color_two?: number | null;
+    color_three?: number | null;
+    cost?: number | null;
+    stage?: number | null;
+    attribute?: number | null;
+    type_one: number | null;
+    type_two?: number | null;
+    bt_abbreviation: number | null;
+    alternative: boolean | null;
+  }>;
 }>();
 
 const emit = defineEmits<{
-	(e: "update:modelValue", value: typeof props.modelValue): void;
-	(e: "search", value: typeof props.modelValue): void;
+  (e: "update:modelValue", value: typeof props.modelValue): void;
+  (e: "search", value: typeof props.modelValue): void;
 }>();
 
 const queryInternal = ref({
-	name: props.modelValue?.name || "",
-	card_type: props.modelValue?.card_type ?? null,
-	rarity: props.modelValue?.rarity ?? null,
-	color_one: props.modelValue?.color_one ?? null,
-	color_two: props.modelValue?.color_two ?? null,
-	color_three: props.modelValue?.color_three ?? null,
-	cost: props.modelValue?.cost ?? null,
-	stage: props.modelValue?.stage ?? null,
-	attribute: props.modelValue?.attribute ?? null,
-	type_one: props.modelValue?.type_one ?? null,
-	type_two: props.modelValue?.type_two ?? null,
-	bt_abbreviation: props.modelValue?.bt_abbreviation ?? null,
-	alternative: props.modelValue?.alternative ?? null,
+  name: props.modelValue?.name || "",
+  card_type: props.modelValue?.card_type ?? null,
+  rarity: props.modelValue?.rarity ?? null,
+  color_one: props.modelValue?.color_one ?? null,
+  color_two: props.modelValue?.color_two ?? null,
+  color_three: props.modelValue?.color_three ?? null,
+  cost: props.modelValue?.cost ?? null,
+  stage: props.modelValue?.stage ?? null,
+  attribute: props.modelValue?.attribute ?? null,
+  type_one: props.modelValue?.type_one ?? null,
+  type_two: props.modelValue?.type_two ?? null,
+  bt_abbreviation: props.modelValue?.bt_abbreviation ?? null,
+  alternative: props.modelValue?.alternative ?? null,
 });
 
 watch(
-	() => props.modelValue,
-	(val) => {
-		queryInternal.value = {
-			name: val?.name || "",
-			card_type: val?.card_type ?? null,
-			rarity: val?.rarity ?? null,
-			color_one: val?.color_one ?? null,
-			color_two: val?.color_two ?? null,
-			color_three: val?.color_three ?? null,
-			cost: val?.cost ?? null,
-			stage: val?.stage ?? null,
-			attribute: val?.attribute ?? null,
-			type_one: val?.type_one ?? null,
-			type_two: val?.type_two ?? null,
-			bt_abbreviation: val?.bt_abbreviation ?? null,
-			alternative: val?.alternative ?? null,
-		};
-	},
+  () => props.modelValue,
+  (val) => {
+    queryInternal.value = {
+      name: val?.name || "",
+      card_type: val?.card_type ?? null,
+      rarity: val?.rarity ?? null,
+      color_one: val?.color_one ?? null,
+      color_two: val?.color_two ?? null,
+      color_three: val?.color_three ?? null,
+      cost: val?.cost ?? null,
+      stage: val?.stage ?? null,
+      attribute: val?.attribute ?? null,
+      type_one: val?.type_one ?? null,
+      type_two: val?.type_two ?? null,
+      bt_abbreviation: val?.bt_abbreviation ?? null,
+      alternative: val?.alternative ?? null,
+    };
+  },
 );
 
 onMounted(async () => {
-	await auxStore.fetchAuxData();
-	auxLoaded.value = true;
+  await auxStore.fetchAuxData();
+  auxLoaded.value = true;
 });
 
 // Filtrar colores para que no se repitan
 function filteredColors(current: "color_one" | "color_two" | "color_three") {
-	const used = [
-		current !== "color_one" ? queryInternal.value.color_one : null,
-		current !== "color_two" ? queryInternal.value.color_two : null,
-		current !== "color_three" ? queryInternal.value.color_three : null,
-	].filter(Boolean);
+  const used = [
+    current !== "color_one" ? queryInternal.value.color_one : null,
+    current !== "color_two" ? queryInternal.value.color_two : null,
+    current !== "color_three" ? queryInternal.value.color_three : null,
+  ].filter(Boolean);
 
-	return auxStore.data.colors.filter((c) => !used.includes(c.id));
+  return auxStore.data.colors.filter((c) => !used.includes(c.id));
 }
 
 function onInput() {
-	emit("update:modelValue", queryInternal.value);
-	emit("search", queryInternal.value);
+  emit("update:modelValue", queryInternal.value);
+  emit("search", queryInternal.value);
 }
 </script>
 
