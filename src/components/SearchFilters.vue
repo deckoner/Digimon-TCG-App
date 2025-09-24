@@ -220,7 +220,7 @@ function onInput() {
   max-width: 400px;
   background-color: var(--color-bg-card);
   color: var(--color-text);
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .search-input:focus {
@@ -243,19 +243,74 @@ function onInput() {
   background-color: var(--color-bg-card);
   color: var(--color-text);
   font-size: 0.95rem;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.filters select:hover,
+.filters input[type='number']:hover {
+  border-color: var(--color-text-hover);
+  background-color: var(--color-button-hover);
+  color: var(--color-text);
 }
 
 .filters select:focus,
 .filters input:focus {
   outline: none;
   border-color: var(--color-bg-nav-active);
+  background-color: var(--color-bg-card);
+  color: var(--color-text);
 }
 
 .alternative-label {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.5rem;
   font-size: 0.95rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  background-color: var(--color-bg-card);
+  border: 1px solid #646cff;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.alternative-label:hover {
+  border-color: var(--color-text-hover);
+  background-color: var(--color-button-hover);
+}
+
+.alternative-label input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-text-hover);
+  cursor: pointer;
+}
+
+.filters input[type='number'] {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #646cff;
+  background-color: var(--color-bg-card);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.filters input[type='number']:hover {
+  border-color: var(--color-text-hover);
+  background-color: var(--color-button-hover);
+  color: var(--color-text);
+}
+
+.filters input[type='number']:focus {
+  outline: none;
+  border-color: var(--color-bg-nav-active);
+  background-color: var(--color-bg-card);
+  color: var(--color-text);
 }
 </style>
