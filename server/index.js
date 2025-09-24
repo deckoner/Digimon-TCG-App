@@ -18,7 +18,6 @@ const axiosConfig = {
   },
 };
 
-// Endpoint principal de cartas
 app.get('/api/cards/ids', async (req, res) => {
   const page = req.query.page || 1;
 
@@ -39,7 +38,6 @@ app.get('/api/cards/ids', async (req, res) => {
   }
 });
 
-// Endpoints auxiliares
 const AUX_ENDPOINTS = ['bts', 'colors', 'card-types', 'rarities', 'stages', 'attributes', 'types'];
 
 AUX_ENDPOINTS.forEach((endpoint) => {
@@ -52,6 +50,27 @@ AUX_ENDPOINTS.forEach((endpoint) => {
       res.status(500).json({ error: `Error al consultar datos auxiliares: ${endpoint}` });
     }
   });
+});
+
+app.get('/api/cards/:card_number', async (req, res) => {
+  const { card_number } = req.params;
+
+  if (!card_number) {
+    return res.status(400).json({ error: 'Se requiere el card_number' });
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/cards/${card_number}`, axiosConfig);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error al obtener carta ${card_number}:`, error.message);
+
+    if (error.response && error.response.status === 404) {
+      return res.status(404).json({ error: `Carta ${card_number} no encontrada` });
+    }
+
+    res.status(500).json({ error: 'Error interno al consultar la carta.' });
+  }
 });
 
 app.listen(PORT, () => {

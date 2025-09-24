@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import CardsView from '@views/CardsView.vue';
 import CollectionView from '@views/CollectionView.vue';
 import DecksView from '@views/DecksView.vue';
+import CardDetailView from '@views/CardDetailView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,6 +20,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/decks',
     name: 'Decks',
     component: DecksView,
+  },
+  {
+    path: '/card/:cardnumber',
+    name: 'CardDetail',
+    component: CardDetailView,
+    props: true,
   },
 ];
 

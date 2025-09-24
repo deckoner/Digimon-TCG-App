@@ -1,6 +1,13 @@
 <template>
   <section class="cards-container">
-    <article v-for="card in props.cards" :key="card.id" class="card">
+    <article
+      v-for="card in props.cards"
+      :key="card.id"
+      class="card"
+      :class="{ clickable: props.clickable }"
+      @click="props.clickable && goToCardDetail(card.card_number)"
+    >
+      <div v-if="card.alternative" class="alternative-badge">Alt</div>
       <img
         :src="lazySrc(card.image_url)"
         :data-src="card.image_url"
@@ -15,12 +22,21 @@
 
 <script setup lang="ts">
 import { onMounted, nextTick, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import LazyCard from '@/assets/LazyCard.webp';
 import type { Card } from '@types/cards';
 
-const props = defineProps<{ cards: Card[] }>();
+const props = defineProps<{ cards: Card[]; clickable?: boolean }>();
+const router = useRouter();
 
 const lazySrc = (src: string) => LazyCard;
+
+function goToCardDetail(cardNumber: string) {
+  // Si tiene un "_", quitar todo desde el "_" hacia el final
+  const baseCardNumber = cardNumber.includes('_') ? cardNumber.split('_')[0] : cardNumber;
+
+  router.push(`/card/${baseCardNumber}`);
+}
 
 function initLazyLoad() {
   const images = document.querySelectorAll('img.lazy') as NodeListOf<HTMLImageElement>;
@@ -41,7 +57,6 @@ function initLazyLoad() {
   images.forEach((img) => observer.observe(img));
 }
 
-// Inicializar lazy load cuando las cartas cambien
 onMounted(() => nextTick(initLazyLoad));
 watch(
   () => props.cards,
@@ -77,6 +92,14 @@ watch(
   position: relative;
 }
 
+.card.clickable {
+  cursor: pointer;
+}
+.card.clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+}
+
 .card img {
   width: 100%;
   height: 80%;
@@ -103,8 +126,17 @@ watch(
   color: var(--color-sub-text);
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+.alternative-badge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background-color: var(--color-card-alt);
+  color: var(--color-bg-card);
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 </style>

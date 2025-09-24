@@ -25,16 +25,15 @@ export const useAuxStore = defineStore('auxStore', {
       this.loading = true;
       this.error = null;
       try {
-        const [bts, colors, cardTypes, rarities, stages, attributes, types] =
-          await Promise.all([
-            axios.get(`${API_URL}/bts`).then((res) => res.data),
-            axios.get(`${API_URL}/colors`).then((res) => res.data),
-            axios.get(`${API_URL}/card-types`).then((res) => res.data),
-            axios.get(`${API_URL}/rarities`).then((res) => res.data),
-            axios.get(`${API_URL}/stages`).then((res) => res.data),
-            axios.get(`${API_URL}/attributes`).then((res) => res.data),
-            axios.get(`${API_URL}/types`).then((res) => res.data),
-          ]);
+        const [bts, colors, cardTypes, rarities, stages, attributes, types] = await Promise.all([
+          axios.get(`${API_URL}/bts`).then((res) => res.data),
+          axios.get(`${API_URL}/colors`).then((res) => res.data),
+          axios.get(`${API_URL}/card-types`).then((res) => res.data),
+          axios.get(`${API_URL}/rarities`).then((res) => res.data),
+          axios.get(`${API_URL}/stages`).then((res) => res.data),
+          axios.get(`${API_URL}/attributes`).then((res) => res.data),
+          axios.get(`${API_URL}/types`).then((res) => res.data),
+        ]);
 
         this.data = {
           bts,

@@ -5,7 +5,11 @@
     <div v-if="cardStore.loading" aria-busy="true">Cargando...</div>
     <div v-if="cardStore.error" role="alert">{{ cardStore.error }}</div>
 
-    <CardGrid v-if="!cardStore.loading && !cardStore.error" :cards="filteredCards" />
+    <CardGrid
+      v-if="!cardStore.loading && !cardStore.error"
+      :cards="filteredCards"
+      :clickable="true"
+    />
   </section>
 </template>
 
@@ -28,12 +32,11 @@ interface FilterQuery {
   type_one: number | null;
   type_two: number | null;
   bt_abbreviation: number | null;
-  alternative: boolean; // Ahora siempre booleano
+  alternative: boolean;
 }
 
 const cardStore = useCardStore();
 
-// Estado inicial: alternative = false para ocultar alters
 const searchQuery = ref<FilterQuery>({
   name: '',
   card_type: null,
@@ -47,7 +50,7 @@ const searchQuery = ref<FilterQuery>({
   type_one: null,
   type_two: null,
   bt_abbreviation: null,
-  alternative: false, // ✅ solo normales al iniciar
+  alternative: false,
 });
 
 onMounted(async () => {
@@ -92,9 +95,6 @@ const filteredCards = computed(() => {
       ? card.bt_abbreviation === searchQuery.value.bt_abbreviation
       : true;
 
-    // Filtro de alternative:
-    // false => solo normales
-    // true  => mostrar todas
     const altMatch = searchQuery.value.alternative === false ? card.alternative === false : true;
 
     return (
